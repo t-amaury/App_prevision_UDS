@@ -24,6 +24,7 @@ def reformatage(weekly_exog2):
     
 def pretraitement2(start_forecast, end_forecast, facteur_externe, pays_A, pays_B):
     facteur_externe = facteur_externe.set_index(["ICAO_Code", "Subject Descriptor"]).transpose().loc['2017':'2029']
+    facteur_externe = facteur_externe.transpose().groupby(level=[0,1]).sum().transpose()
     facteur_externe.index= pd.to_datetime(facteur_externe.index, format='%Y')
     weekly_exog2 = reindex_exogenes(start_forecast, end_forecast, facteur_externe)
     weekly_exog2 = transform_covid_exo(weekly_exog2)
