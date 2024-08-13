@@ -166,8 +166,8 @@ facteur_externe_df = data['facteur_externe']
 facteur_externe_petrole_df = data['facteur_externe_petrole']
 region_translation_df = data['translation']
 
-prevision_df['pair'] = prevision_df['pair'].apply(lambda x: translate_pair(x, region_translation_df))
-prevision_UDS_df['pair'] = prevision_UDS_df['pair'].apply(lambda x: translate_pair(x, region_translation_df))
+prevision_df['pair_nom'] = prevision_df['pair'].apply(lambda x: translate_pair(x, region_translation_df))
+prevision_UDS_df['pair_nom'] = prevision_UDS_df['pair'].apply(lambda x: translate_pair(x, region_translation_df))
 
 if 'facteur_externe_modifiable_df' not in st.session_state:
     st.session_state.facteur_externe_modifiable_df = data['facteur_externe_modifiable']
@@ -266,7 +266,7 @@ from_year, to_year = st.slider(
     value=[min_value, max_value]
 )
 
-countries = predictions['pair'].unique()
+countries = predictions['pair_nom'].unique()
 
 if not len(countries):
     st.warning("Select at least one country")
@@ -282,7 +282,7 @@ st.write('')
 st.write('')
 
 filtered_prevision_df = predictions[
-    (predictions['pair'].isin(selected_countries))
+    (predictions['pair_nom'].isin(selected_countries))
     & (predictions['Year'] <= to_year)
     & (from_year <= predictions['Year'])
 ]
@@ -296,7 +296,7 @@ all_pair = predictions[
 
 all_pair['Year'] = all_pair['Year'].astype(str)
 
-# Calculate TCMA for each pair
+# Calculate TCMA for each pair_nom
 def calculate_tcma(df, from_year, to_year):
     start_value = df[df['Year'] == from_year]['prevision'].values[0]
     end_value = df[df['Year'] == to_year]['prevision'].values[0]
@@ -306,7 +306,7 @@ def calculate_tcma(df, from_year, to_year):
 
 #Pour UDS
 filtered_prevision_UDS_df = predictions_UDS[
-    (predictions_UDS['pair'].isin(selected_countries))
+    (predictions_UDS['pair_nom'].isin(selected_countries))
     & (predictions_UDS['Year'] <= to_year)
     & (from_year <= predictions['Year'])
 ]
@@ -318,15 +318,15 @@ all_pair_UDS = predictions_UDS[
 all_pair_UDS['Year'] = all_pair_UDS['Year'].astype(str)
 ##
 
-# Calculate total prevision sum for each pair and TCMA
-prevision_sum_df = predictions.groupby('pair')['prevision'].sum().reset_index()
-prevision_sum_UDS_df = predictions_UDS.groupby('pair')['prevision'].sum().reset_index()
-prevision_sum_df['TCMA'] = prevision_sum_df['pair'].apply(lambda x: calculate_tcma(predictions[predictions['pair'] == x], from_year, to_year))
+# Calculate total prevision sum for each pair_nom and TCMA
+prevision_sum_df = predictions.groupby('pair_nom')['prevision'].sum().reset_index()
+prevision_sum_UDS_df = predictions_UDS.groupby('pair_nom')['prevision'].sum().reset_index()
+prevision_sum_df['TCMA'] = prevision_sum_df['pair_nom'].apply(lambda x: calculate_tcma(predictions[predictions['pair_nom'] == x], from_year, to_year))
 # Renommer la colonne 'prevision' pour éviter les conflits lors de la fusion
 prevision_sum_df.rename(columns={'prevision': 'prevision_standard'}, inplace=True)
 prevision_sum_UDS_df.rename(columns={'prevision': 'prevision_uds'}, inplace=True)
 # Fusionner les DataFrames basés sur la colonne 'pair'
-combined_prevision_sum_df = pd.merge(prevision_sum_df, prevision_sum_UDS_df, on='pair')
+combined_prevision_sum_df = pd.merge(prevision_sum_df, prevision_sum_UDS_df, on='pair_nom')
 # Sélectionner les 20 paires avec la plus grande somme de prévisions (selon le modèle standard)
 top_20_prevision_sum_df = combined_prevision_sum_df.nlargest(20, 'prevision_standard')
 
@@ -340,14 +340,14 @@ with col1:
         filtered_prevision_df,
         x='Year',
         y='prevision',
-        color='pair',
+        color='pair_nom',
     )
 
     st.line_chart(
         filtered_prevision_UDS_df,
         x='Year',
         y='prevision',
-        color='pair',
+        color='pair_nom',
     )
 
 with col2:
@@ -418,15 +418,15 @@ st.download_button(
 # Calculs pour les prévisions
 # Assurez-vous que 'predictions' et 'predictions_UDS' sont définis et filtrés correctement avant
 # Calcul de la somme des prévisions pour chaque paire et TCMA
-prevision_sum_standard_df = predictions.groupby('pair')['prevision'].sum().reset_index()
-prevision_sum_UDS_df = predictions_UDS.groupby('pair')['prevision'].sum().reset_index()
+prevision_sum_standard_df = predictions.groupby('pair_nom')['prevision'].sum().reset_index()
+prevision_sum_UDS_df = predictions_UDS.groupby('pair_nom')['prevision'].sum().reset_index()
 
 prevision_sum_standard_df['TCMA'] = prevision_sum_standard_df['pair'].apply(
-    lambda x: calculate_tcma(predictions[predictions['pair'] == x], from_year, to_year)
+    lambda x: calculate_tcma(predictions[predictions['pair_nom'] == x], from_year, to_year)
 )
 
 prevision_sum_UDS_df['TCMA'] = prevision_sum_UDS_df['pair'].apply(
-    lambda x: calculate_tcma(predictions_UDS[predictions_UDS['pair'] == x], from_year, to_year)
+    lambda x: calculate_tcma(predictions_UDS[predictions_UDS['pair_nom'] == x], from_year, to_year)
 )
 
 # Fusion des DataFrames de prévisions standard et UDS
