@@ -45,6 +45,7 @@ def regroupement_annees2(forecasts_dict):
     combined_df = pd.concat(rows)
     grouped = combined_df.groupby(['pair', 'year'])['value'].sum().reset_index()
     pivot_df = grouped.pivot_table(index='pair', columns='year', values='value', fill_value=0)
+    pivot_df.columns = pivot_df.columns.astype(str)
     pivot_df.reset_index(inplace=True)
     return pivot_df
     
