@@ -69,7 +69,7 @@ def load_data():
     )
     data['prevision']['Year'] = pd.to_numeric(data['prevision']['Year'])
 
-    # Transformation des données de prévision
+    # Transformation des données de prévision UDS
     data['prevision_UDS'] = data['prevision_UDS'].melt(
         ['pair'],
         [str(x) for x in range(MIN_YEAR_PREVISION, MAX_YEAR_PREVISION + 1)],
@@ -214,6 +214,26 @@ if st.sidebar.button('Sauvegarder les modifications'):
     # Recalculate predictions with updated factors
     predictions = update_predictions(edited_data, edited_data_petrole, prevision_df, "2023-12-31", "2031-01-05")
     predictions_UDS = update_predictions_UDS(edited_data, edited_data_petrole, prevision_UDS_df, "2023-12-31", "2031-01-05")
+       # Transformation des données de prévision
+    MIN_YEAR_PREVISION = 2024
+    MAX_YEAR_PREVISION = 2030
+    predictions = predictions.melt(
+        ['pair'],
+        [str(x) for x in range(MIN_YEAR_PREVISION, MAX_YEAR_PREVISION + 1)],
+        'Year',
+        'prevision',
+    )
+    predictions['Year'] = pd.to_numeric(predictions['Year'])
+
+    # Transformation des données de prévision
+   predictions_UDS = predictions_UDS.melt(
+        ['pair'],
+        [str(x) for x in range(MIN_YEAR_PREVISION, MAX_YEAR_PREVISION + 1)],
+        'Year',
+        'prevision',
+    )
+    predictions_UDS['Year'] = pd.to_numeric(predictions_UDS['Year'])
+    
     st.session_state['predictions'] = predictions
     st.session_state['predictions_UDS'] = predictions_UDS
     st.sidebar.success('Prédictions mises à jour avec succès!')
