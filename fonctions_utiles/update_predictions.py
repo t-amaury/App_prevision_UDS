@@ -39,12 +39,12 @@ def regroupement_annees2(forecasts_dict):
         # Ajouter la colonne pour la paire
         df['pair'] = '_'.join(key)
         # Ajouter la colonne pour l'année
-        df['Year'] = df.index.year
+        df['year'] = df.index.year
         rows.append(df)
 
     combined_df = pd.concat(rows)
-    grouped = combined_df.groupby(['pair', 'Year'])['value'].sum().reset_index()
-    pivot_df = grouped.pivot_table(index='pair', columns='Year', values='value', fill_value=0)
+    grouped = combined_df.groupby(['pair', 'year'])['value'].sum().reset_index()
+    pivot_df = grouped.pivot_table(index='pair', columns='year', values='value', fill_value=0)
     pivot_df.reset_index(inplace=True)
     return pivot_df
     
