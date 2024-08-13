@@ -6,4 +6,3 @@ gitpython
 openpyxl
 joblib
 statsmodels
-os
