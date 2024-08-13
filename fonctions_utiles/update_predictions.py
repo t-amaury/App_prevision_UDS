@@ -19,6 +19,18 @@ def load_model(region_A, region_B):
         model['exp_smoothing'] = joblib.load(exp_smoothing_model_path)
     return model
 
+def load_model_UDS(region_A, region_B):
+    """Load the prediction models for a given pair of regions."""
+    prophet_model_path = f'model_UDS/prophet_model_{region_A}_{region_B}.joblib'
+    exp_smoothing_model_path = f'model_UDS/exp_smoothing_model_{region_A}_{region_B}.joblib'
+    
+    model = {}
+    if os.path.exists(prophet_model_path):
+        model['prophet'] = joblib.load(prophet_model_path)
+    if os.path.exists(exp_smoothing_model_path):
+        model['exp_smoothing'] = joblib.load(exp_smoothing_model_path)
+    return model
+
 def regroupement_annees2(forecasts_dict):
     rows = []
     for key, series in forecasts_dict.items():
@@ -47,6 +59,34 @@ def update_predictions(facteur_externe_df, facteur_externe_petrole_df, prevision
     for pair in region_pairs:
         region_A, region_B = pair.split('--')
         model = load_model(region_A, region_B)
+        test_exog = pretraitement2(start_date, end_date, facteur_externe_df, region_A, region_B)
+
+        if 'prophet' in model:
+            forecast_prophet = model.predict(test_exog)
+            forecast = pd.Series(list(forecast_prophet["yhat"]), index=list(forecast_prophet["ds"]))
+        elif "exp_smoothing" in model:
+            results = model.fit()
+            params = model.params
+            forecast = model.predict(start = start_date, end = end_date, params=params)
+            forecast = pd.Series(forecast, index=date_range)
+        else:
+            forecast = [0.147] * (len(date_range))
+            forecast = pd.Series(forecast, index=date_range)
+        forecasts_dict[(region_A, region_B)] = forecast
+        predictions = regroupement_annees2(forecasts_dict)
+    return predictions
+
+def update_predictions_UDS(facteur_externe_df, facteur_externe_petrole_df, prevision_df, start_date, end_date):
+    """Update predictions based on modified external factors."""
+    # Placeholder for recalculating predictions
+    forecasts_dict = {}
+
+    # Get all unique region pairs
+    region_pairs = prevision_df['pair'].unique()
+    
+    for pair in region_pairs:
+        region_A, region_B = pair.split('--')
+        model = load_model_UDS(region_A, region_B)
         test_exog = pretraitement2(start_date, end_date, facteur_externe_df, region_A, region_B)
 
         if 'prophet' in model:
