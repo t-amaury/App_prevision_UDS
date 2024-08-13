@@ -214,6 +214,7 @@ if st.sidebar.button('Sauvegarder les modifications'):
     # Recalculate predictions with updated factors
     predictions = update_predictions(edited_data, edited_data_petrole, prevision_df, "2023-12-31", "2031-01-05")
     predictions_UDS = update_predictions_UDS(edited_data, edited_data_petrole, prevision_UDS_df, "2023-12-31", "2031-01-05")
+    st.write(predictions)
        # Transformation des données de prévision
     MIN_YEAR_PREVISION = 2024
     MAX_YEAR_PREVISION = 2030
