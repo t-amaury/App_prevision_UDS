@@ -57,7 +57,7 @@ def update_predictions(facteur_externe_df, facteur_externe_petrole_df, prevision
     region_pairs = prevision_df['pair'].unique()
     
     for pair in region_pairs:
-        region_A, region_B = pair.split('--')
+        region_A, region_B = pair.split('_')
         model = load_model(region_A, region_B)
         test_exog = pretraitement2(start_date, end_date, facteur_externe_df, region_A, region_B)
 
@@ -85,7 +85,7 @@ def update_predictions_UDS(facteur_externe_df, facteur_externe_petrole_df, previ
     region_pairs = prevision_df['pair'].unique()
     
     for pair in region_pairs:
-        region_A, region_B = pair.split('--')
+        region_A, region_B = pair.split('_')
         model = load_model_UDS(region_A, region_B)
         test_exog = pretraitement2(start_date, end_date, facteur_externe_df, region_A, region_B)
 
