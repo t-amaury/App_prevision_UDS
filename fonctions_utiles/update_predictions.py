@@ -39,7 +39,7 @@ def regroupement_annees2(forecasts_dict):
         # Ajouter la colonne pour la paire
         df['pair'] = '_'.join(key)
         # Ajouter la colonne pour l'année
-        df['year'] = df.index.year
+        df['Year'] = df.index.year
         rows.append(df)
 
     combined_df = pd.concat(rows)
