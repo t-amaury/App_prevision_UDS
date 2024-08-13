@@ -421,11 +421,11 @@ st.download_button(
 prevision_sum_standard_df = predictions.groupby('pair_nom')['prevision'].sum().reset_index()
 prevision_sum_UDS_df = predictions_UDS.groupby('pair_nom')['prevision'].sum().reset_index()
 
-prevision_sum_standard_df['TCMA'] = prevision_sum_standard_df['pair'].apply(
+prevision_sum_standard_df['TCMA'] = prevision_sum_standard_df['pair_nom'].apply(
     lambda x: calculate_tcma(predictions[predictions['pair_nom'] == x], from_year, to_year)
 )
 
-prevision_sum_UDS_df['TCMA'] = prevision_sum_UDS_df['pair'].apply(
+prevision_sum_UDS_df['TCMA'] = prevision_sum_UDS_df['pair_nom'].apply(
     lambda x: calculate_tcma(predictions_UDS[predictions_UDS['pair_nom'] == x], from_year, to_year)
 )
 
@@ -433,7 +433,7 @@ prevision_sum_UDS_df['TCMA'] = prevision_sum_UDS_df['pair'].apply(
 combined_prevision_df = pd.merge(
     prevision_sum_standard_df, 
     prevision_sum_UDS_df, 
-    on='pair', 
+    on='pair_nom', 
     suffixes=('_standard', '_UDS')
 )
 
