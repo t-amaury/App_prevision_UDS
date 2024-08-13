@@ -175,6 +175,10 @@ if 'facteur_externe_petrole_modifiable_df' not in st.session_state:
     st.session_state.facteur_externe_petrole_modifiable_df = data['facteur_externe_petrole_modifiable']
 
 # -----------------------------------------------------------------------------
+# Set the title that appears at the top of the page.
+st.title(':airplane: Prévision du trafic')
+st.write('Utilisation de data de prévision de 2024 à 2030.')
+# -----------------------------------------------------------------------------
 # Sidebar: Modify and Save Data
 
 st.sidebar.header('Données de Facteur Externe')
