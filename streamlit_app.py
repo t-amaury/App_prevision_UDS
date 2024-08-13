@@ -357,22 +357,22 @@ st.download_button(
 
 
 
-# Download buttons
-csv = predictions.to_csv(index=False)
-st.download_button(
-    label="Télécharger le nombre de vols par paires en CSV",
-    data=csv,
-    file_name='prevision_data_paired.csv',
-    mime='text/csv',
-)
+# # Download buttons
+# csv = predictions.to_csv(index=False)
+# st.download_button(
+#     label="Télécharger le nombre de vols par paires en CSV",
+#     data=csv,
+#     file_name='prevision_data_paired.csv',
+#     mime='text/csv',
+# )
 
-csv2 = sum_prevision_df.to_csv(index=False)
-st.download_button(
-    label="Télécharger le nombre de vols total en CSV",
-    data=csv2,
-    file_name='prevision_data_total.csv',
-    mime='text/csv',
-)
+# csv2 = sum_prevision_df.to_csv(index=False)
+# st.download_button(
+#     label="Télécharger le nombre de vols total en CSV",
+#     data=csv2,
+#     file_name='prevision_data_total.csv',
+#     mime='text/csv',
+# )
 
 
 # import streamlit as st
