@@ -226,7 +226,7 @@ if st.sidebar.button('Sauvegarder les modifications'):
     predictions['Year'] = pd.to_numeric(predictions['Year'])
 
     # Transformation des données de prévision
-   predictions_UDS = predictions_UDS.melt(
+    predictions_UDS = predictions_UDS.melt(
         ['pair'],
         [str(x) for x in range(MIN_YEAR_PREVISION, MAX_YEAR_PREVISION + 1)],
         'Year',
