@@ -243,7 +243,9 @@ if st.sidebar.button('Sauvegarder les modifications'):
 
     st.session_state['predictions'] = predictions
     st.session_state['predictions_UDS'] = predictions_UDS
+    st.rerun()
     st.sidebar.success('Prédictions mises à jour avec succès!')
+
 
 if st.sidebar.button('Réinitialiser'):
     save_data(facteur_externe_df, type='facteur_externe')
