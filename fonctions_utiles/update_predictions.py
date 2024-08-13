@@ -76,7 +76,7 @@ def update_predictions(facteur_externe_df, facteur_externe_petrole_df, prevision
             forecast = [0.147] * (len(date_range))
             forecast = pd.Series(forecast, index=date_range)
         forecasts_dict[(region_A, region_B)] = forecast
-        predictions = regroupement_annees2(forecasts_dict)
+    predictions = regroupement_annees2(forecasts_dict)
     return predictions
 
 def update_predictions_UDS(facteur_externe_df, facteur_externe_petrole_df, prevision_df, start_date, end_date):
@@ -107,5 +107,5 @@ def update_predictions_UDS(facteur_externe_df, facteur_externe_petrole_df, previ
             forecast = [0.147] * (len(date_range))
             forecast = pd.Series(forecast, index=date_range)
         forecasts_dict[(region_A, region_B)] = forecast
-        predictions = regroupement_annees2(forecasts_dict)
+    predictions = regroupement_annees2(forecasts_dict)
     return predictions
