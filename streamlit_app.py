@@ -6,7 +6,7 @@ import git
 from pathlib import Path
 import shutil
 from fonctions_utiles.pretraitement_facteurs_externes import pretraitement2
-from fonctions_utiles.update_predictions import update_predictions
+from fonctions_utiles.update_predictions import update_predictions, update_predictions_UDS
 
 # Set the title and favicon that appear in the Browser's tab bar.
 st.set_page_config(
@@ -213,7 +213,7 @@ if st.sidebar.button('Sauvegarder les modifications'):
 
     # Recalculate predictions with updated factors
     predictions = update_predictions(edited_data, edited_data_petrole, prevision_df, "2023-12-31", "2031-01-05")
-    predictions_UDS = update_predictions(edited_data, edited_data_petrole, prevision_UDS_df, "2023-12-31", "2031-01-05")
+    predictions_UDS = update_predictions_UDS(edited_data, edited_data_petrole, prevision_UDS_df, "2023-12-31", "2031-01-05")
     st.session_state['predictions'] = predictions
     st.session_state['predictions_UDS'] = predictions_UDS
     st.sidebar.success('Prédictions mises à jour avec succès!')
