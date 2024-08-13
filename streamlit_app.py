@@ -393,20 +393,73 @@ st.line_chart(
     color='Type',
 )
 
-# Optionally, add a download button for the filtered data
-csv = filtered_prevision_df.to_csv(index=False)
+# Exportation
+# -----------------------------------------------------------------------------
+# Exportation des données en CSV
+
+# Exporter les facteurs externes modifiables
+csv_facteurs_externes = st.session_state.facteur_externe_modifiable_df.to_csv(index=False)
 st.download_button(
-    label="Télécharger le nombre de vols par paires en CSV",
-    data=csv,
-    file_name='prevision_data_paired.csv',
+    label="Télécharger les facteurs externes modifiables en CSV",
+    data=csv_facteurs_externes,
+    file_name='facteurs_externes_modifiables.csv',
     mime='text/csv',
 )
 
-# Optionally, add a download button for the filtered data
-csv2 = sum_prevision_df.to_csv(index=False)
+# Exporter les prix du pétrole modifiables
+csv_petro = st.session_state.facteur_externe_petrole_modifiable_df.to_csv(index=False)
 st.download_button(
-    label="Télécharger le nombre de vols total en CSV",
-    data=csv2,
-    file_name='prevision_data_total.csv',
+    label="Télécharger les prix du pétrole modifiables en CSV",
+    data=csv_petro,
+    file_name='prix_petrole_modifiables.csv',
+    mime='text/csv',
+)
+
+# Calculs pour les prévisions
+# Assurez-vous que 'predictions' et 'predictions_UDS' sont définis et filtrés correctement avant
+# Calcul de la somme des prévisions pour chaque paire et TCMA
+prevision_sum_standard_df = predictions.groupby('pair')['prevision'].sum().reset_index()
+prevision_sum_UDS_df = predictions_UDS.groupby('pair')['prevision'].sum().reset_index()
+
+prevision_sum_standard_df['TCMA'] = prevision_sum_standard_df['pair'].apply(
+    lambda x: calculate_tcma(predictions[predictions['pair'] == x], from_year, to_year)
+)
+
+prevision_sum_UDS_df['TCMA'] = prevision_sum_UDS_df['pair'].apply(
+    lambda x: calculate_tcma(predictions_UDS[predictions_UDS['pair'] == x], from_year, to_year)
+)
+
+# Fusion des DataFrames de prévisions standard et UDS
+combined_prevision_df = pd.merge(
+    prevision_sum_standard_df, 
+    prevision_sum_UDS_df, 
+    on='pair', 
+    suffixes=('_standard', '_UDS')
+)
+
+# Calcul des prévisions totales
+sum_prevision_standard_df = all_pair.groupby('Year')['prevision'].sum().reset_index()
+sum_prevision_standard_df['Type'] = 'Prévision Totale Standard'
+
+sum_prevision_UDS_df = all_pair_UDS.groupby('Year')['prevision'].sum().reset_index()
+sum_prevision_UDS_df['Type'] = 'Prévision Totale UDS'
+
+# Fusion des prévisions totales
+total_prevision_df = pd.concat([sum_prevision_standard_df, sum_prevision_UDS_df])
+
+# Exporter les prévisions combinées et totales
+csv_combined_prevision = combined_prevision_df.to_csv(index=False)
+st.download_button(
+    label="Télécharger les prévisions combinées (Standard et UDS) en CSV",
+    data=csv_combined_prevision,
+    file_name='previsions_combined.csv',
+    mime='text/csv',
+)
+
+csv_total_prevision = total_prevision_df.to_csv(index=False)
+st.download_button(
+    label="Télécharger les prévisions totales en CSV",
+    data=csv_total_prevision,
+    file_name='total_prevision_data.csv',
     mime='text/csv',
 )
