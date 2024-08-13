@@ -57,14 +57,17 @@ def update_predictions(facteur_externe_df, facteur_externe_petrole_df, prevision
     region_pairs = prevision_df['pair'].unique()
     
     for pair in region_pairs:
+        date_range = pd.date_range(start=start_date, end=end_date, freq='D')
         region_A, region_B = pair.split('_')
-        model = load_model(region_A, region_B)
+        model_dict = load_model(region_A, region_B)
         test_exog = pretraitement2(start_date, end_date, facteur_externe_df, region_A, region_B)
 
-        if 'prophet' in model:
+        if 'prophet' in model_dict:
+            model = model_dict["prophet"]
             forecast_prophet = model.predict(test_exog)
             forecast = pd.Series(list(forecast_prophet["yhat"]), index=list(forecast_prophet["ds"]))
-        elif "exp_smoothing" in model:
+        elif "exp_smoothing" in model_dict:
+            model = model_dict["exp_smoothing"]
             results = model.fit()
             params = model.params
             forecast = model.predict(start = start_date, end = end_date, params=params)
@@ -89,10 +92,12 @@ def update_predictions_UDS(facteur_externe_df, facteur_externe_petrole_df, previ
         model = load_model_UDS(region_A, region_B)
         test_exog = pretraitement2(start_date, end_date, facteur_externe_df, region_A, region_B)
 
-        if 'prophet' in model:
+        if 'prophet' in model_dict:
+            model = model_dict["prophet"]
             forecast_prophet = model.predict(test_exog)
             forecast = pd.Series(list(forecast_prophet["yhat"]), index=list(forecast_prophet["ds"]))
-        elif "exp_smoothing" in model:
+        elif "exp_smoothing" in model_dict:
+            model = model_dict["exp_smoothing"]
             results = model.fit()
             params = model.params
             forecast = model.predict(start = start_date, end = end_date, params=params)
