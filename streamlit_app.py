@@ -235,7 +235,9 @@ if st.sidebar.button('Sauvegarder les modifications'):
         'prevision',
     )
     predictions_UDS['Year'] = pd.to_numeric(predictions_UDS['Year'])
-    
+    predictions['pair_nom'] = predictions['pair'].apply(lambda x: translate_pair(x, region_translation_df))
+    predictions_UDS['pair_nom'] = predictions_UDS['pair'].apply(lambda x: translate_pair(x, region_translation_df))
+
     st.session_state['predictions'] = predictions
     st.session_state['predictions_UDS'] = predictions_UDS
     st.sidebar.success('Prédictions mises à jour avec succès!')
