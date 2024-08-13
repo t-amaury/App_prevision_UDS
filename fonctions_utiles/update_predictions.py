@@ -89,7 +89,7 @@ def update_predictions_UDS(facteur_externe_df, facteur_externe_petrole_df, previ
     
     for pair in region_pairs:
         region_A, region_B = pair.split('_')
-        model = load_model_UDS(region_A, region_B)
+        model_dict = load_model_UDS(region_A, region_B)
         test_exog = pretraitement2(start_date, end_date, facteur_externe_df, region_A, region_B)
 
         if 'prophet' in model_dict:
