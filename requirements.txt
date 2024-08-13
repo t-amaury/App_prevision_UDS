@@ -5,5 +5,5 @@ prophet
 gitpython
 openpyxl
 joblib
-statsmodels.tsa.holtwinters
+statsmodels
 os
