@@ -108,9 +108,9 @@ def save_uploaded_files(uploaded_files):
 
     for uploaded_file in uploaded_files:
         file_path = save_dir / uploaded_file.name
-
+        noms_colonnes = ['Origin of message','Flight date','Time of departure/entry','Departure aerodrome','Arrival aerodrome','Type of aircraft','User Number','User Nationality','Correction Code','Main Exemption Code','Weight Coefficient','Distance Coefficient','Service Units','Exemption Indicator','Flight category',]
         # Read the uploaded file into a pandas DataFrame
-        df = pd.read_csv(uploaded_file)
+        df = pd.read_csv(uploaded_file sep=';', usecols = noms_colonnes))
 
         # Example: Automatically drop unnecessary columns to reduce file size
         # columns_to_drop = ['Column1', 'Column2']  # Replace with actual column names
