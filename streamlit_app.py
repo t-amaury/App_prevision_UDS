@@ -205,16 +205,17 @@ adjustment_percentage = st.sidebar.number_input(
 edited_data_petrole = st.sidebar.data_editor(st.session_state.facteur_externe_petrole_modifiable_df, key="data_editor_2")
 
 if st.sidebar.button('Sauvegarder les modifications'):
-    save_data(edited_data, type='facteur_externe')
+    
     st.session_state.facteur_externe_modifiable_df = edited_data
+    save_data(edited_data, type='facteur_externe')
 
     for year in range(selected_years[0], selected_years[1] + 1):
         year_str = str(year)
         if year_str in edited_data_petrole.columns:
             edited_data_petrole[year_str] *= (1 + (adjustment_percentage / 100))
-    save_data(edited_data_petrole, type='facteur_externe_petrole')
+    
     st.session_state.facteur_externe_petrole_modifiable_df = edited_data_petrole
-
+    save_data(edited_data_petrole, type='facteur_externe_petrole')
     # Recalculate predictions with updated factors
     predictions = update_predictions(edited_data, edited_data_petrole, prevision_df, "2023-12-31", "2031-01-05")
     predictions_UDS = update_predictions_UDS(edited_data, edited_data_petrole, prevision_UDS_df, "2023-12-31", "2031-01-05")
