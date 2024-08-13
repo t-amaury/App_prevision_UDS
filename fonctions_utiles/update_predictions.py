@@ -88,6 +88,7 @@ def update_predictions_UDS(facteur_externe_df, facteur_externe_petrole_df, previ
     region_pairs = prevision_df['pair'].unique()
     
     for pair in region_pairs:
+        date_range = pd.date_range(start=start_date, end=end_date, freq='D')
         region_A, region_B = pair.split('_')
         model_dict = load_model_UDS(region_A, region_B)
         test_exog = pretraitement2(start_date, end_date, facteur_externe_df, region_A, region_B)
